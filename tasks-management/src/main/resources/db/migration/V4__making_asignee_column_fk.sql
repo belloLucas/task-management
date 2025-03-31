@@ -1,0 +1,1 @@
+ALTER TABLE tasks ADD CONSTRAINT fk_assignee FOREIGN KEY (assignee) REFERENCES users(id);

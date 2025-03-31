@@ -1,0 +1,462 @@
+$primary: #2a3f54;
+$primary-dark: #1a2c3b;
+$secondary: #27ae60;
+$secondary-dark: #219653;
+$bg-light: #f5f7fa;
+$bg-white: white;
+$border: #eee;
+$text-dark: #555;
+$text-light: white;
+$error: #e53935;
+$disabled: #b0bec5;
+$warning: #ffa000;
+$success: #43a047;
+$info: #1976d2;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@mixin flex($dir: row, $justify: flex-start, $align: stretch) {
+  display: flex;
+  flex-direction: $dir;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin badge($bg, $color) {
+  background-color: $bg;
+  color: $color;
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.dashboard {
+  @include flex(column);
+  min-height: 100vh;
+  background-color: $bg-light;
+
+  &-header {
+    background-color: $primary;
+    color: $text-light;
+    padding: 1rem 2rem;
+    @include flex(row, space-between, center);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .header-left h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .header-right {
+      @include flex(row, center, center);
+      gap: 1rem;
+
+      .user-name {
+        font-weight: 500;
+      }
+
+      .btn-logout {
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        color: $text-light;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.3);
+        }
+      }
+    }
+  }
+
+  &-content {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    width: 100%;
+  }
+}
+
+.tasks {
+  &-header {
+    @include flex(row, space-between, center);
+    margin-bottom: 1.5rem;
+
+    h2 {
+      font-size: 1.5rem;
+      color: $primary;
+      margin: 0;
+    }
+  }
+
+  &-container {
+    background-color: $bg-white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid $border;
+    }
+
+    th {
+      background-color: #f9fafb;
+      font-weight: 500;
+      color: $text-dark;
+    }
+
+    tr:hover {
+      background-color: #f9fafb;
+    }
+
+    .description-cell {
+      max-width: 300px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+// Buttons
+.btn-add-task {
+  @include flex(row, center, center);
+  gap: 0.5rem;
+  background-color: $secondary;
+  color: $text-light;
+  border: none;
+  border-radius: 4px;
+  padding: 0.65rem 1.25rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: $secondary-dark;
+  }
+
+  .icon {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+}
+
+.btn {
+  background-color: $primary;
+  color: $text-light;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: $primary-dark;
+  }
+  &:disabled {
+    background-color: $disabled;
+    cursor: not-allowed;
+  }
+
+  &-complete {
+    background-color: $success;
+  }
+  &-edit {
+    background-color: $info;
+  }
+  &-delete {
+    background-color: $error;
+  }
+
+  &-cancel {
+    background-color: #f5f5f5;
+    color: $text-dark;
+    border: 1px solid #ddd;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+
+    &:hover {
+      background-color: #eee;
+    }
+  }
+
+  &-submit {
+    background-color: $primary;
+    color: $text-light;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+
+    &:hover {
+      background-color: $primary-dark;
+    }
+    &:disabled {
+      background-color: $disabled;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Badges
+.priority-badge,
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.priority {
+  &-high {
+    @include badge(#ffebee, $error);
+  }
+  &-medium {
+    @include badge(#fff8e1, $warning);
+  }
+  &-low {
+    @include badge(#e8f5e9, $success);
+  }
+}
+
+.status {
+  &-todo {
+    @include badge(#e3f2fd, $info);
+  }
+  &-progress {
+    @include badge(#fff8e1, $warning);
+  }
+  &-done {
+    @include badge(#e8f5e9, $success);
+  }
+}
+
+// Action cells
+.actions-cell {
+  @include flex(row, center, center);
+  gap: 0.5rem;
+}
+
+// Empty state
+.no-tasks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: $bg-white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 3rem 2rem;
+  text-align: center;
+
+  p {
+    color: #666;
+    margin-bottom: 1.5rem;
+  }
+}
+
+// Modal
+.modal {
+  &-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    @include flex(row, center, center);
+    z-index: 1000;
+  }
+
+  & {
+    background-color: $bg-white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+
+  &-header {
+    @include flex(row, space-between, center);
+    padding: 1.5rem;
+    border-bottom: 1px solid $border;
+
+    h2 {
+      margin: 0;
+      color: $primary;
+      font-size: 1.3rem;
+      font-weight: 500;
+    }
+
+    .btn-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #777;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+
+      &:hover {
+        color: #333;
+      }
+    }
+  }
+
+  &-body {
+    padding: 1.5rem;
+  }
+}
+
+// Forms
+.form {
+  &-group {
+    margin-bottom: 1.2rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: $text-dark;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border 0.2s;
+
+      &:focus {
+        outline: none;
+        border-color: $primary;
+        box-shadow: 0 0 0 2px rgba(42, 63, 84, 0.1);
+      }
+    }
+
+    textarea {
+      resize: vertical;
+    }
+  }
+
+  &-row {
+    @include flex(row, flex-start, stretch);
+    gap: 1rem;
+
+    .form-group {
+      flex: 1;
+    }
+  }
+
+  &-actions {
+    @include flex(row, flex-end, center);
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+}
+
+.error-message {
+  color: $error;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+}
+
+// Responsiveness
+@media (max-width: 910px) {
+  .tasks-container {
+    overflow-x: auto;
+    width: 100%;
+
+    .tasks-table {
+      min-width: 800px;
+
+      th,
+      td {
+        padding: 0.75rem 0.5rem;
+        white-space: nowrap;
+      }
+
+      .description-cell {
+        max-width: 120px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .tasks-table {
+    font-size: 0.9rem;
+
+    th,
+    td {
+      padding: 0.75rem;
+    }
+    .description-cell {
+      max-width: 150px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 1rem;
+
+    .header-right {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  .tasks-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+
+    .btn-add-task {
+      align-self: stretch;
+      justify-content: center;
+    }
+  }
+
+  .tasks-container {
+    margin: 0 -1rem;
+    border-radius: 0;
+  }
+
+  .dashboard-content {
+    padding: 0 1rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

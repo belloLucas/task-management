@@ -1,0 +1,210 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <div class="header-left">
+      <h1>Dashboard de Tarefas</h1>
+    </div>
+    <div class="header-right">
+      <span class="user-name">Olá, {{ userName }}</span>
+      <button class="btn-logout" (click)="logout()">Sair</button>
+    </div>
+  </header>
+
+  <main class="dashboard-content">
+    <div class="tasks-header">
+      <h2>Suas Tarefas</h2>
+      <button class="btn-add-task" (click)="openModal()">
+        <span>Adicionar Tarefa</span>
+        <span class="icon">+</span>
+      </button>
+    </div>
+
+    <div class="tasks-container" *ngIf="tasks.length > 0">
+      <table class="tasks-table">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Descrição</th>
+            <th>Responsável</th>
+            <th>Prioridade</th>
+            <th>Status</th>
+            <th>Prazo</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let task of tasks">
+            <td>{{ task.title }}</td>
+            <td class="description-cell">{{ task.description }}</td>
+            <td>{{ task.assignee.firstName }} {{ task.assignee.lastName }}</td>
+            <td>
+              <span
+                class="priority-badge"
+                [ngClass]="getPriorityClass(task.priority)"
+              >
+                {{ task.priority }}
+              </span>
+            </td>
+            <td>
+              <span
+                class="status-badge"
+                [ngClass]="getStatusClass(task.status)"
+              >
+                {{
+                  task.status === "TODO"
+                    ? "A Fazer"
+                    : task.status === "IN_PROGRESS"
+                    ? "Em Progresso"
+                    : "Concluído"
+                }}
+              </span>
+            </td>
+            <td>{{ task.deadline | date : "dd/MM/yyyy" }}</td>
+            <td class="actions-cell">
+              <button
+                class="btn btn-complete"
+                (click)="completeTask(task.id)"
+                [disabled]="task.status === 'DONE'"
+              >
+                <i class="fas fa-check"></i>
+              </button>
+              <button
+                class="btn btn-edit"
+                (click)="openEditModal(task)"
+                [disabled]="task.status === 'DONE'"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+              <button
+                class="btn btn-delete"
+                (click)="deleteTask(task.id)"
+                [disabled]="task.status === 'DONE'"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="no-tasks" *ngIf="tasks.length === 0">
+      <p>Nenhuma tarefa encontrada. Crie uma nova tarefa para começar!</p>
+      <button class="btn-add-task" (click)="openModal()">
+        <span>Adicionar Tarefa</span>
+        <span class="icon">+</span>
+      </button>
+    </div>
+  </main>
+
+  <!-- Modal para adicionar/editar tarefa -->
+  <div class="modal-overlay" *ngIf="isModalOpen">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>{{ modalTitle }}</h2>
+        <button class="btn-close" (click)="closeModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="taskForm" (ngSubmit)="createTask()">
+          <div class="form-group">
+            <label for="title">Título da Tarefa*</label>
+            <input
+              type="text"
+              id="title"
+              formControlName="title"
+              placeholder="Digite o título da tarefa"
+            />
+            <div
+              class="error-message"
+              *ngIf="
+                taskForm.get('title')?.invalid && taskForm.get('title')?.touched
+              "
+            >
+              Título é obrigatório
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Descrição*</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              rows="4"
+              placeholder="Descreva a tarefa"
+            ></textarea>
+            <div
+              class="error-message"
+              *ngIf="
+                taskForm.get('description')?.invalid &&
+                taskForm.get('description')?.touched
+              "
+            >
+              Descrição é obrigatória
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="assignee">Responsável*</label>
+            <select id="assignee" formControlName="assignee">
+              <option value="" disabled selected>
+                Selecione um responsável
+              </option>
+              <option *ngFor="let user of users" [value]="user.id">
+                {{ user.firstName }} {{ user.lastName }}
+              </option>
+            </select>
+            <div
+              class="error-message"
+              *ngIf="
+                taskForm.get('assignee')?.invalid &&
+                taskForm.get('assignee')?.touched
+              "
+            >
+              Responsável é obrigatório
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="priority">Prioridade*</label>
+              <select id="priority" formControlName="priority">
+                <option value="LOW">Baixa</option>
+                <option value="MEDIUM">Média</option>
+                <option value="HIGH">Alta</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="deadline">Prazo*</label>
+              <input type="date" id="deadline" formControlName="deadline" />
+              <div
+                class="error-message"
+                *ngIf="
+                  taskForm.get('deadline')?.invalid &&
+                  taskForm.get('deadline')?.touched
+                "
+              >
+                Prazo é obrigatório
+              </div>
+            </div>
+          </div>
+
+          <div class="error-message" *ngIf="error">{{ error }}</div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" (click)="closeModal()">
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="btn-submit"
+              [disabled]="taskForm.invalid || loading"
+            >
+              {{ loading ? "Salvando..." : submitButtonText }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

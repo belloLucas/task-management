@@ -1,0 +1,169 @@
+<router-outlet *ngIf="isLoggedIn"></router-outlet>
+
+<div class="landing-page" *ngIf="!isLoggedIn">
+  <div class="left-section">
+    <header class="header">
+      <h1>Gerenciamento de Tarefas</h1>
+      <p>Organize suas tarefas de forma eficiente!</p>
+    </header>
+  </div>
+
+  <div class="right-section">
+    <main class="main-content">
+      <div class="form-toggle">
+        <button
+          [class.active]="isActiveForm('login')"
+          (click)="setActiveForm('login')"
+        >
+          Login
+        </button>
+        <button
+          [class.active]="isActiveForm('register')"
+          (click)="setActiveForm('register')"
+        >
+          Cadastre-se
+        </button>
+      </div>
+
+      <section class="auth-section">
+        <div class="form-container" *ngIf="isActiveForm('login')">
+          <h2>Login</h2>
+          <form
+            [formGroup]="loginForm"
+            (ngSubmit)="onLogin()"
+            class="login-form"
+          >
+            <label for="login-email">Email:</label>
+            <input
+              type="email"
+              id="login-email"
+              formControlName="email"
+              placeholder="Email"
+            />
+            <div
+              class="error-message"
+              *ngIf="
+                loginForm.get('email')?.invalid &&
+                loginForm.get('email')?.touched
+              "
+            >
+              Email inválido
+            </div>
+
+            <label for="login-password">Senha:</label>
+            <input
+              type="password"
+              id="login-password"
+              formControlName="password"
+              placeholder="Senha"
+            />
+            <div
+              class="error-message"
+              *ngIf="
+                loginForm.get('password')?.invalid &&
+                loginForm.get('password')?.touched
+              "
+            >
+              Senha deve ter pelo menos 6 caracteres
+            </div>
+
+            <div class="error-message" *ngIf="error">{{ error }}</div>
+
+            <button type="submit" [disabled]="loginForm.invalid || loading">
+              {{ loading ? "Entrando..." : "Entrar" }}
+            </button>
+          </form>
+        </div>
+
+        <div class="form-container" *ngIf="isActiveForm('register')">
+          <h2>Cadastre-se</h2>
+          <form
+            [formGroup]="registerForm"
+            (ngSubmit)="onRegister()"
+            class="register-form"
+          >
+            <div class="form-row">
+              <div class="form-group">
+                <label for="register-name">Primeiro Nome:</label>
+                <input
+                  type="text"
+                  id="register-name"
+                  formControlName="firstName"
+                  placeholder="Primeiro nome"
+                />
+                <div
+                  class="error-message"
+                  *ngIf="
+                    registerForm.get('firstName')?.invalid &&
+                    registerForm.get('firstName')?.touched
+                  "
+                >
+                  Nome é obrigatório
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="register-lastname">Sobrenome:</label>
+                <input
+                  type="text"
+                  id="register-lastname"
+                  formControlName="lastName"
+                  placeholder="Sobrenome"
+                />
+                <div
+                  class="error-message"
+                  *ngIf="
+                    registerForm.get('lastName')?.invalid &&
+                    registerForm.get('lastName')?.touched
+                  "
+                >
+                  Sobrenome é obrigatório
+                </div>
+              </div>
+            </div>
+
+            <label for="register-email">Email:</label>
+            <input
+              type="email"
+              id="register-email"
+              formControlName="email"
+              placeholder="Email"
+            />
+            <div
+              class="error-message"
+              *ngIf="
+                registerForm.get('email')?.invalid &&
+                registerForm.get('email')?.touched
+              "
+            >
+              Email inválido
+            </div>
+
+            <label for="register-password">Senha:</label>
+            <input
+              type="password"
+              id="register-password"
+              formControlName="password"
+              placeholder="Senha"
+            />
+            <div
+              class="error-message"
+              *ngIf="
+                registerForm.get('password')?.invalid &&
+                registerForm.get('password')?.touched
+              "
+            >
+              Senha deve ter pelo menos 6 caracteres
+            </div>
+
+            <div class="error-message" *ngIf="error">{{ error }}</div>
+
+            <button type="submit" [disabled]="registerForm.invalid || loading">
+              {{ loading ? "Cadastrando..." : "Cadastrar" }}
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
