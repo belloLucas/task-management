@@ -2,7 +2,7 @@
 
 Este é um projeto feito como forma de teste técnico para a ESIG Group.
 
-#### ⚠️ Documentação da API no arquivo DocAPI.md
+#### ⚠️ Documentação da API no arquivo <a href="https://github.com/belloLucas/task-management/blob/main/DocAPI.md">DocAPI.md</a>
 
 #### Como rodar o projeto
 
